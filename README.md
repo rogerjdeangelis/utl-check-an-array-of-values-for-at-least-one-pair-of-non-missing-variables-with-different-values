@@ -19,7 +19,7 @@ Check an array of values for at least one pair of non-missing variables with dif
     https://communities.sas.com/t5/SAS-Programming/Best-method-for-comparing-multiple-variables/td-p/587837                             
                                                                                                                                         
                                                                                                                                         
-     Six Solutions                                                                                                                      
+     Five Solutions                                                                                                                      
                                                                                                                                         
          a. HASH datastep                                                                                                               
             Bartosz Jablonski                                                                                                           
@@ -40,12 +40,7 @@ Check an array of values for at least one pair of non-missing variables with dif
             Ben Herman                                                                                                                  
             baherman@gmail.com                                                                                                          
                                                                                                                                         
-                                                                                                                                        
-         f. Coalescec and dim(array)-cmiss(of array) = number non missing elements                                                      
-            I did not see that one coming                                                                                               
-            novinosrin                                                                                                                  
-            https://communities.sas.com/t5/user/viewprofilepage/user-id/138205                                                          
-                                                                                                                                        
+                                                        
                                                                                                                                         
      Why you should normalize your input (make it long and skinny                                                                       
                                                                                                                                         
@@ -386,80 +381,7 @@ Check an array of values for at least one pair of non-missing variables with dif
          drop i j dup:;                                                                                                                 
      run;                                                                                                                               
                                                                                                                                         
-    * __                    _                                                                                                           
-     / _|    ___ ___   __ _| | ___  ___  ___ ___  ___                                                                                   
-    | |_    / __/ _ \ / _` | |/ _ \/ __|/ __/ _ \/ __|                                                                                  
-    |  _|  | (_| (_) | (_| | |  __/\__ \ (_|  __/ (__                                                                                   
-    |_|(_)  \___\___/ \__,_|_|\___||___/\___\___|\___|                                                                                  
-                                                                                                                                        
-    ;                                                                                                                                   
-                                                                                                                                        
-                                                                                                                                        
-    data want ;                                                                                                                         
-                                                                                                                                        
-       set have;                                                                                                                        
-                                                                                                                                        
-        /*                                                                                                                              
-          Consdider                                                                                                                     
-                                                                                                                                        
-          ID  V1  V2  V3  V4                                                                                                            
-          1       A       A                                                                                                             
-        */                                                                                                                              
-                                                                                                                                        
-       array vs v:;                                                                                                                     
-                                                                                                                                        
-       _k=coalescec(of vs(*));                                                                                                          
-                                                                                                                                        
-        /* _K = A (first non-missing */                                                                                                 
-                                                                                                                                        
-       _n=dim(vs)-cmiss(of vs(*));                                                                                                      
-                                                                                                                                        
-        /*                                                                                                                              
-         cmiss(of vs(*)) =2                                                                                                             
-         _n =2 (number of non-missing eleements in the vs array                                                                         
-       */                                                                                                                               
-                                                                                                                                        
-       _k1=catx(' ',of vs(*));                                                                                                          
-                                                                                                                                        
-        /* _k1 = 'A A' non missing with a blank between */                                                                              
-                                                                                                                                        
-                                                                                                                                        
-       if _k="" then flag=0; /* all missing - rjd 9/12/2019 */                                                                          
-       else Flag=not (_n=countw(_k1,strip(_k)));                                                                                        
-                                                                                                                                        
-       _n=countw(_k1,strip(_k));                                                                                                        
-                                                                                                                                        
-         /*                                                                                                                             
-         countw('A A','A') = 2                                                                                                          
-         if all values are equal and match the number of non missing elements                                                           
-         then we have hust on distint vale                                                                                              
-         */                                                                                                                             
-                                                                                                                                        
-       drop _:;                                                                                                                         
-                                                                                                                                        
-    run;                                                                                                                                
-                                                                                                                                        
-                                                                                                                                        
-    * without comments;                                                                                                                 
-                                                                                                                                        
-    data want ;                                                                                                                         
-                                                                                                                                        
-       set have(obs=1);                                                                                                                 
-                                                                                                                                        
-       array vs v:;                                                                                                                     
-                                                                                                                                        
-       _k=coalescec(of vs(*));                                                                                                          
-       _n=dim(vs)-cmiss(of vs(*));                                                                                                      
-       _k1=catx(' ',of vs(*));                                                                                                          
-                                                                                                                                        
-       if _k="" then flag=0; /* all missing - rjd 9/12/2019 */                                                                          
-       else Flag=not (_n=countw(_k1,strip(_k)));                                                                                        
-                                                                                                                                        
-       _n=countw(_k1,strip(_k));                                                                                                        
-                                                                                                                                        
-       drop _:;                                                                                                                         
-    run;                                                                                                                                
-                                                                                                                                        
+                                                                                      
                                                                                                                                         
                                                                                                                                         
 
